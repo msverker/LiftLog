@@ -1,2 +1,3 @@
 # LiftLog
-The repo which contains my first app (for educational purposes). The app will track your workout logs and keep you updated on your progress
+
+LiftLog is a web application that allows users to track their workouts and progress over time. Users can create an account, log in, and create, edit, and delete workouts. Users can also view their workout history and see their progress over time
