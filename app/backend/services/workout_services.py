@@ -29,42 +29,33 @@ def delete_workout(workout_id: int) -> bool:
     workouts = [w for w in workouts if w["id"] != workout_id]
     return len(workouts) < original_length
 
-
-def create_exercise(workout_id: int, name: str, sets: int, reps: int) -> dict:
-    """
-    Create a new exercise inside a specific workout.
-    """
-    global exercise_id_counter
-    for workout in workouts:
-        if workout["id"] == workout_id:
-            exercise = {
-                "id": exercise_id_counter,
-                "name": name,
-                "sets": sets,
-                "reps": reps,
-            }
-            workout["exercises"].append(exercise)
-            exercise_id_counter += 1
-            return exercise
-    return None 
-
 def get_exercises(workout_id: int) -> List[Dict]:
     """
-    Get all exercises for a specific workout.
+    Get all exercises in a workout
     """
-    for workout in workouts:
-        if workout["id"] == workout_id:
-            return workout["exercises"]
-    return None
+    workout = next((w for w in workouts if w["id"] == workout_id), None)
+    return workout["exercises"] if workout else []
+
+def create_exercise(workout_id: int, title: str, sets: int, reps: int) -> Dict:
+    """
+    Create a new exercise in a workout
+    """
+    global exercise_id_counter
+    workout = next((w for w in workouts if w["id"] == workout_id), None)
+    if not workout:
+        return None
+    exercise = {"id": exercise_id_counter, "title": title, "sets": sets, "reps": reps}
+    workout["exercises"].append(exercise)
+    exercise_id_counter += 1
+    return exercise
 
 def delete_exercise(workout_id: int, exercise_id: int) -> bool:
     """
-    Delete an exercise from a specific workout.
+    Delete an exercise from a workout
     """
-    for workout in workouts:
-        if workout["id"] == workout_id:
-            original_length = len(workout["exercises"])
-            workout["exercises"] = [e for e in workout["exercises"] if e["id"] != exercise_id]
-            return len(workout["exercises"]) < original_length
-    return False
-
+    workout = next((w for w in workouts if w["id"] == workout_id), None)
+    if not workout:
+        return False
+    original_length = len(workout["exercises"])
+    workout["exercises"] = [e for e in workout["exercises"] if e["id"] != exercise_id]
+    return len(workout["exercises"]) < original_length
